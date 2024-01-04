@@ -110,22 +110,22 @@ export default function CreatePost() {
   const handleFile2Change = (event) => {
     event.preventDefault();
     setFile2(event.target.files[0]);
-    console.log(file2);
+    formIMG.append("file", file2);
   };
   const handleFile3Change = (event) => {
     event.preventDefault();
     setFile3(event.target.files[0]);
-    console.log(file3);
+    formIMG.append("file", file3);
   };
   const handleFile4Change = (event) => {
     event.preventDefault();
     setFile4(event.target.files[0]);
-    console.log(file4);
+    formIMG.append("file", file4);
   };
   const handleFile5Change = (event) => {
     event.preventDefault();
     setFile5(event.target.files[0]);
-    console.log(file5);
+    formIMG.append("file", file5);
   };
   const formIMG = new FormData();
 
