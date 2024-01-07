@@ -2,6 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import styles from "../index.module.css";
 import CreatePostButton from "../components/CreatePostButton";
+import Footer from "../components/Footer";
 export default function ItemPage() {
   return (
     <>
@@ -74,17 +75,7 @@ export default function ItemPage() {
           </div>
         </main>
       </div>
-      <footer className={styles.mobile__footer}>
-        <div className={styles.mobile__home}>
-          <div className={styles.mobile__home_pic}></div>
-        </div>
-        <div className={styles.mobile__plus}>
-          <div className={styles.mobile__plus_pic}></div>
-        </div>
-        <div className={styles.mobile__profile}>
-          <div className={styles.mobile__profile_pic}></div>
-        </div>
-      </footer>
+      <Footer />
     </>
   );
 }

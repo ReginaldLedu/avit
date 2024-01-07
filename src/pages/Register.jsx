@@ -1,10 +1,11 @@
 import React, { useState } from "react";
 import { addUser } from "../store/sliceUsers";
 import { useDispatch } from "react-redux";
-import { Navigate } from "react-router-dom";
+import { Navigate, Link } from "react-router-dom";
 import styles from "../index.module.css";
 // import { register } from "../api/requests";
 import { useRegisterRTKMutation } from "../api/requests";
+import Footer from "../components/Footer";
 
 // import { useSelector } from "react-redux";
 
@@ -102,90 +103,103 @@ export default function Register() {
   } */
 
   return (
-    <div className={styles.register}>
-      <section className={styles.register__page}>
-        <div className={styles.register__wrapper}>
-          <div className={styles.login__logo}></div>
-          <input
-            type="text"
-            value={email}
-            className={styles.register__email}
-            placeholder="email"
-            onChange={(e) => {
-              updateEmail(e.target.value);
-            }}
-          ></input>
+    <>
+      <div className={styles.register}>
+        <header className={styles.header_mob}>
+          <Link to="/">
+            <div className={styles.mobile__logo}>
+              <div className={styles.mobile__img}></div>
+            </div>
+          </Link>
+        </header>
+        <section className={styles.register__page}>
+          <div className={styles.register__wrapper}>
+            <div className={styles.login__logo}></div>
+            <input
+              type="text"
+              value={email}
+              className={styles.register__email}
+              placeholder="email"
+              onChange={(e) => {
+                updateEmail(e.target.value);
+              }}
+            ></input>
 
-          <input
-            type="password"
-            value={password}
-            className={styles.register__password}
-            placeholder="Пароль"
-            onChange={(e) => {
-              updatePassword(e.target.value);
-            }}
-          />
-          <input
-            type="password"
-            value={passwordConf}
-            className={styles["register__password-repeat"]}
-            placeholder="Повторите пароль"
-            onChange={(e) => {
-              updatePasswordConf(e.target.value);
-            }}
-          />
-          <input
-            type="text"
-            value={userName}
-            className={styles.register__name}
-            placeholder="Имя (необязательно)"
-            onChange={(e) => {
-              updateUserName(e.target.value);
-            }}
-          />
-          <input
-            type="text"
-            value={userLastName}
-            onChange={(e) => {
-              updateUserLastName(e.target.value);
-            }}
-            className={styles.register__lastname}
-            placeholder="Фамилия (необязательно)"
-          />
-          <input
-            type="text"
-            value={userCity}
-            onChange={(e) => {
-              updateUserCity(e.target.value);
-            }}
-            className={styles.register__city}
-            placeholder="Город (необязательно)"
-          />
-          <button
-            className={styles.register__register}
-            onClick={(e) => {
-              onSubmit(e);
-              registerRTK({
-                email: email,
-                name: userName,
-                surname: userLastName,
-                role: "user",
-                city: userCity,
-                password: password,
-              });
-              
-            }}
-          >
-            Зарегистрироваться
-          </button>
-          {status === "success" ? <Navigate to="/login" replace={true} /> : " "}
-          {status === "error" ? (
-            <p>Пожалуйста, проверьте поле с email и паролями</p>
-          ) : (
-            ""
-          )}
-        </div>
-      </section>
-    </div>
+            <input
+              type="password"
+              value={password}
+              className={styles.register__password}
+              placeholder="Пароль"
+              onChange={(e) => {
+                updatePassword(e.target.value);
+              }}
+            />
+            <input
+              type="password"
+              value={passwordConf}
+              className={styles["register__password-repeat"]}
+              placeholder="Повторите пароль"
+              onChange={(e) => {
+                updatePasswordConf(e.target.value);
+              }}
+            />
+            <input
+              type="text"
+              value={userName}
+              className={styles.register__name}
+              placeholder="Имя (необязательно)"
+              onChange={(e) => {
+                updateUserName(e.target.value);
+              }}
+            />
+            <input
+              type="text"
+              value={userLastName}
+              onChange={(e) => {
+                updateUserLastName(e.target.value);
+              }}
+              className={styles.register__lastname}
+              placeholder="Фамилия (необязательно)"
+            />
+            <input
+              type="text"
+              value={userCity}
+              onChange={(e) => {
+                updateUserCity(e.target.value);
+              }}
+              className={styles.register__city}
+              placeholder="Город (необязательно)"
+            />
+            <button
+              className={styles.register__register}
+              onClick={(e) => {
+                onSubmit(e);
+                registerRTK({
+                  email: email,
+                  name: userName,
+                  surname: userLastName,
+                  role: "user",
+                  city: userCity,
+                  password: password,
+                });
+              }}
+            >
+              Зарегистрироваться
+            </button>
+            {status === "success" ? (
+              <Navigate to="/login" replace={true} />
+            ) : (
+              " "
+            )}
+            {status === "error" ? (
+              <p>Пожалуйста, проверьте поле с email и паролями</p>
+            ) : (
+              ""
+            )}
+          </div>
+        </section>
+        <Footer />
+      </div>
+    </>
   );
 }

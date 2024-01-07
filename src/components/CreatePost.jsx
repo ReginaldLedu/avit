@@ -1,10 +1,8 @@
-import React, { useRef, useState } from "react";
+import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { Link } from "react-router-dom";
 import { closeAddPost } from "../store/slice";
-// import axios from "axios";
 import styles from "../index.module.css";
-//import { addPostText } from "../api/requests";
-// import { getTokens } from "../store/sliceUsers";
 import {
   refreshTokens,
   useAddPostTextRTKMutation,
@@ -12,6 +10,8 @@ import {
 } from "../api/requests";
 
 export default function CreatePost() {
+  const formIMG = new FormData();
+  const tokens = useSelector((state) => state.avitProUser.tokens);
   /* async function onSubmit(id, token) {
     let response = await fetch(`http://localhost:8090/ads/${id}/image`, {
       method: "POST",
@@ -24,21 +24,28 @@ export default function CreatePost() {
     let result = await response.json();
     alert(result.message);
   }*/
-  const formRef = useRef();
-  const [updatePost, result] = useAddImageToThePostMutation();
-  console.log(updatePost);
+  // const formRef = useRef();
+  const [updatePost] =
+    useAddImageToThePostMutation(/*{
+    body: formIMG,
+    token: tokens.access_token,
+  }*/);
+
   const accessToken = localStorage.getItem("access_token");
   const refreshToken = localStorage.getItem("refresh_token");
   const [addPostTextRTK] = useAddPostTextRTKMutation();
 
   const fileReader = new FileReader();
-  const tokens = useSelector((state) => state.avitProUser.tokens);
+
   // console.log(tokens);
   const [url, setURL] = useState("");
+
   fileReader.onloadend = () => {
     setURL(fileReader.result);
     console.log(url);
   };
+
+  const [newPostId, setNewPostId] = useState(0);
 
   const handleAddPost = async () => {
     await addPostTextRTK({
@@ -55,22 +62,9 @@ export default function CreatePost() {
       })
       .then((data) => {
         console.log(data.data.id);
-        fetch(`http://localhost:8090/ads/${data.data.id}/image`, {
-          method: "POST",
-          headers: {
-            /*"Content-Type": "mutipart/form-data",*/
-            Authorization: `Bearer ${tokens.access_token}`,
-          },
-          body: formIMG,
-        });
-        // onSubmit(data.data.id, tokens.access_token);
-        /* updatePost({
-          body: formIMG,
-          id: data.data.id,
-          token: tokens.access_token,
-        }); */
+        setNewPostId(data.data.id);
       });
-    console.log(result);
+    console.log(newPostId);
   };
 
   const [formData, setFormData] = useState({
@@ -89,50 +83,61 @@ export default function CreatePost() {
     setFormData({ ...formData, [name]: value });
   };
 
-  /*const onChange = (e) => {
-    formRef.current.append("file", e.target.files[0]);
-    console.log(formRef);
-  };*/
-
   const dispatch = useDispatch();
   const closeCreateForm = () => {
     dispatch(closeAddPost());
   };
   const handleFile1Change = (event) => {
     event.preventDefault();
+    formIMG.append("file", event.target.files[0]);
+    console.log(formIMG);
     setFile1(event.target.files[0]);
+    updatePost({
+      id: newPostId,
+      body: formIMG,
+      token: tokens.access_token,
+    });
+
     console.log(file1);
     fileReader.readAsDataURL(event.target.files[0]);
-    formIMG.append("file", file1);
-    console.log(formIMG);
   };
 
   const handleFile2Change = (event) => {
     event.preventDefault();
     setFile2(event.target.files[0]);
-    formIMG.append("file", file2);
+    console.log(file2);
   };
   const handleFile3Change = (event) => {
     event.preventDefault();
     setFile3(event.target.files[0]);
-    formIMG.append("file", file3);
+    console.log(file3);
   };
   const handleFile4Change = (event) => {
     event.preventDefault();
     setFile4(event.target.files[0]);
-    formIMG.append("file", file4);
+    console.log(file4);
   };
   const handleFile5Change = (event) => {
     event.preventDefault();
     setFile5(event.target.files[0]);
-    formIMG.append("file", file5);
+    console.log(file5);
   };
-  const formIMG = new FormData();
 
   return (
     <section className={styles.createPost}>
+      <header className={styles.header_mob}>
+        <Link to="/">
+          <div className={styles.mobile__logo}>
+            <div className={styles.mobile__img}></div>
+          </div>
+        </Link>
+      </header>
       <div className={styles.createPost__wrapper}>
         <div className={styles.createPost__topWrapper}>
+          <div
+            onClick={closeCreateForm}
+            className={styles.createPost__back}
+          ></div>
           <h2 className={styles.createPost__title}>Новое объявление</h2>
           <div onClick={closeCreateForm} className={styles.createPost__close}>
             <span className={styles.createPost__close1}></span>
@@ -166,63 +171,6 @@ export default function CreatePost() {
           className={styles.goodsText}
         ></textarea>
 
-        <form ref={formRef} action="submit" id="form" name="form">
-          <label htmlFor="input__file1" className={styles.createPost__photo}>
-            <span className={styles.createPost__plus1}></span>
-            <span className={styles.createPost__plus2}></span>
-          </label>
-          <input
-            onChange={handleFile1Change}
-            className={styles.createPost__photoInput}
-            type="file"
-            id="input__file1"
-            name="file"
-          />
-          <label htmlFor="input__file2" className={styles.createPost__photo}>
-            <span className={styles.createPost__plus1}></span>
-            <span className={styles.createPost__plus2}></span>
-          </label>
-          <input
-            onChange={handleFile2Change}
-            className={styles.createPost__photoInput}
-            type="file"
-            id="input__file2"
-            name="picture"
-          />
-          <label htmlFor="input__file3" className={styles.createPost__photo}>
-            <span className={styles.createPost__plus1}></span>
-            <span className={styles.createPost__plus2}></span>
-          </label>
-          <input
-            onChange={handleFile3Change}
-            className={styles.createPost__photoInput}
-            type="file"
-            id="input__file3"
-            name="picture"
-          />
-          <label htmlFor="input__file4" className={styles.createPost__photo}>
-            <span className={styles.createPost__plus1}></span>
-            <span className={styles.createPost__plus2}></span>
-          </label>
-          <input
-            onChange={handleFile4Change}
-            className={styles.createPost__photoInput}
-            type="file"
-            id="input__file4"
-            name="picture"
-          />
-          <label htmlFor="input__file5" className={styles.createPost__photo}>
-            <span className={styles.createPost__plus1}></span>
-            <span className={styles.createPost__plus2}></span>
-          </label>
-          <input
-            onChange={handleFile5Change}
-            className={styles.createPost__photoInput}
-            type="file"
-            id="input__file5"
-            name="picture"
-          />
-        </form>
         <label
           htmlFor="createPost__price"
           className={styles.createPost__labels}
@@ -242,7 +190,6 @@ export default function CreatePost() {
           onClick={() => {
             try {
               handleAddPost();
-              // updatePost(url, 1, tokens.access_token);
             } catch (error) {
               console.log(error);
             } finally {
@@ -252,9 +199,119 @@ export default function CreatePost() {
           type="submit"
           className={styles.createPost__submit}
         >
-          Опубликовать
+          Опубликовать текстовую часть
         </button>
+
+        {/* <form ref={formRef} action="submit" id="form" name="form"> */}
+        <p className={styles.changePost__photosTitle}>
+          Фотографии товара{" "}
+          <span className={styles.changePost__photosTitle_grey}>
+            {" "}
+            не более 5 фотографий
+          </span>
+        </p>
+
+        <label
+          id="one"
+          htmlFor="input__file1"
+          className={styles.createPost__photo}
+        >
+          <span className={styles.createPost__plus1}></span>
+          <span className={styles.createPost__plus2}></span>
+        </label>
+        <input
+          onChange={handleFile1Change}
+          className={styles.createPost__photoInput}
+          type="file"
+          id="input__file1"
+          name="file"
+        />
+        <label
+          id="two"
+          htmlFor="input__file2"
+          className={styles.createPost__photo}
+        >
+          <span className={styles.createPost__plus1}></span>
+          <span className={styles.createPost__plus2}></span>
+        </label>
+        <input
+          onChange={handleFile2Change}
+          className={styles.createPost__photoInput}
+          type="file"
+          id="input__file2"
+          name="picture"
+        />
+        <label
+          id="three"
+          htmlFor="input__file3"
+          className={styles.createPost__photo}
+        >
+          <span className={styles.createPost__plus1}></span>
+          <span className={styles.createPost__plus2}></span>
+        </label>
+        <input
+          onChange={handleFile3Change}
+          className={styles.createPost__photoInput}
+          type="file"
+          id="input__file3"
+          name="picture"
+        />
+        <label
+          id="four"
+          htmlFor="input__file4"
+          className={styles.createPost__photo}
+        >
+          <span className={styles.createPost__plus1}></span>
+          <span className={styles.createPost__plus2}></span>
+        </label>
+        <input
+          onChange={handleFile4Change}
+          className={styles.createPost__photoInput}
+          type="file"
+          id="input__file4"
+          name="picture"
+        />
+        <label
+          id="five"
+          htmlFor="input__file5"
+          className={styles.createPost__photo}
+        >
+          <span className={styles.createPost__plus1}></span>
+          <span className={styles.createPost__plus2}></span>
+        </label>
+        <input
+          onChange={handleFile5Change}
+          className={styles.createPost__photoInput}
+          type="file"
+          id="input__file5"
+          name="picture"
+        />
+        {/* </form> */}
       </div>
     </section>
   );
 }
+
+/* fetch(`http://localhost:8090/ads/${data.data.id}/image`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "mutipart/form-data",
+            Authorization: `Bearer ${tokens.access_token}`,
+          },
+          body: formIMG,
+        }); 
+        // onSubmit(data.data.id, tokens.access_token);
+        for (let i = 1; i < 2; i++) {
+          updatePost({
+            body: formIMG,
+            id: data.data.id,
+            token: tokens.access_token,
+          });
+
+          console.log({
+            body: formIMG,
+            id: data.data.id,
+            token: tokens.access_token,
+          });
+          formIMG.delete("file");
+        } */

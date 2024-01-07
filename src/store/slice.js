@@ -13,6 +13,7 @@ export const avitProSlice = createSlice({
     currentUserPosts: [],
     sellerPosts: [],
     commentSwitchOn: false,
+    changePostSwitchOn: false,
     comments: [],
     allPostIMG: [],
   },
@@ -53,6 +54,12 @@ export const avitProSlice = createSlice({
     getAllPostImg: (state, action) => {
       state.allPostIMG = action.payload;
     },
+    changePost: (state) => {
+      state.changePostSwitchOn = true;
+    },
+    changePostClose: (state) => {
+      state.changePostSwitchOn = false;
+    },
   },
 });
 
@@ -70,4 +77,6 @@ export const {
   closeCommentBox,
   getComments,
   getAllPostImg,
+  changePost,
+  changePostClose
 } = avitProSlice.actions;

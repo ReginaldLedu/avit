@@ -4,12 +4,14 @@ import { Link, Navigate } from "react-router-dom";
 import axios from "axios";
 import { useEffect } from "react";
 import { data } from "../helpers/helper";
-import CreatePostButton from "../components/CreatePostButton";
+/* import CreatePostButton from "../components/CreatePostButton"; */
+import Header from "../components/Header";
 import Comment from "../components/Comment";
 import CommentButton from "../components/CommentButton";
 import styles from "../index.module.css";
 import { getComments } from "../store/slice";
 import ShowPhoneButton from "../components/ShowPhoneButton";
+import Footer from "../components/Footer";
 
 export default function CurrentPost() {
   const allProductIMG = useSelector((state) => state.avitProToolkit.allPostIMG);
@@ -65,7 +67,8 @@ export default function CurrentPost() {
       {showComment === true ? <Comment /> : ""}
       {chosenProduct.title !== undefined ? (
         <>
-          <header className={styles.header}>
+          <Header />
+          {/* <header className={styles.header}>
             <div className={styles.mobile__logo}>
               <div className={styles.mobile__img}></div>
             </div>
@@ -73,7 +76,7 @@ export default function CurrentPost() {
             <Link to="/profile">
               <div className={styles.profile__button}>Личный кабинет</div>
             </Link>
-          </header>
+          </header> */}
           <div className={styles.profile__wrapper}>
             <div className={styles.backToMain__box}>
               <div className={styles.logo}></div>
@@ -121,9 +124,21 @@ export default function CurrentPost() {
                   </p>
                   <ShowPhoneButton />
                   <div className={styles.itemPage__seller}>
-                    <img src="#" alt="" className={styles.seller__pic} />
+                    {chosenProduct.user.avatar !== null ? (
+                      <img
+                        src={`http://localhost:8090/${chosenProduct.user.avatar}`}
+                        alt="No user avatar"
+                        className={styles.seller__pic}
+                      />
+                    ) : (
+                      " "
+                    )}
+
                     <div className={styles.seller__box}>
-                      <Link to="/sellerprofile">
+                      <Link
+                        className={styles.itemPage__seller_name}
+                        to="/sellerprofile"
+                      >
                         <p className={styles.itemPage__seller_name}>
                           {chosenProduct.user.name}
                         </p>
@@ -145,17 +160,7 @@ export default function CurrentPost() {
               </div>
             </main>
           </div>
-          <footer className={styles.mobile__footer}>
-            <div className={styles.mobile__home}>
-              <div className={styles.mobile__home_pic}></div>
-            </div>
-            <div className={styles.mobile__plus}>
-              <div className={styles.mobile__plus_pic}></div>
-            </div>
-            <div className={styles.mobile__profile}>
-              <div className={styles.mobile__profile_pic}></div>
-            </div>
-          </footer>
+          <Footer />
         </>
       ) : (
         <Navigate to="/" />

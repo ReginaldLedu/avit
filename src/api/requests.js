@@ -53,6 +53,37 @@ export const avitProApi = createApi({
         url: "/images",
       }),
     }),
+    removePost: build.mutation({
+      query: ({ id, token }) => ({
+        url: `http://localhost:8090/ads/${id}`,
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }),
+    }),
+    changePostRTK: build.mutation({
+      query: ({ title, description, price, id, token }) => ({
+        url: `http://localhost:8090/ads/${id}`,
+        method: "PATCH",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ title, description, price }),
+      }),
+    }),
+    addUserAvatar: build.mutation({
+      query: ({ token, file }) => ({
+        url: `http://localhost:8090/user/avatar`,
+        method: "POST",
+        headers: {
+          "Content-Type": "mutipart/form-data",
+          Authorization: `Bearer ${token}`,
+        },
+        body: { file: file },
+      }),
+    }),
   }),
 });
 
@@ -62,6 +93,9 @@ export const {
   useFetchAllAdsQuery,
   useAddPostTextRTKMutation,
   useGetAllPostIMGRTKQuery,
+  useRemovePostMutation,
+  useChangePostRTKMutation,
+  useAddUserAvatarMutation,
 } = avitProApi;
 
 /* export async function register({ email, password, name, surname, city }) {

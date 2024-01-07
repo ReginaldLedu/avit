@@ -5,11 +5,13 @@ import { useSelector, useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
 import styles from "../index.module.css";
 import { dateForSeller } from "../helpers/helper";
-import CreatePostButton from "../components/CreatePostButton";
+//import CreatePostButton from "../components/CreatePostButton";
 import { getSellerPosts } from "../store/slice";
 import { data } from "../helpers/helper";
 import { getCurrentPost } from "../store/slice";
-import PersonalPage from "../components/PersonalPage";
+//import PersonalPage from "../components/PersonalPage";
+import Footer from "../components/Footer";
+import Header from "../components/Header";
 
 export default function SellerProfile() {
   const [chosenPost, setChosenPost] = useState(false);
@@ -20,6 +22,7 @@ export default function SellerProfile() {
   const chosenProduct = useSelector(
     (state) => state.avitProToolkit.currentPost
   );
+  console.log(chosenProduct);
   const [sellerPosts, setSellerPosts] = useState([]);
   const updateSellerPosts = (value) => {
     setSellerPosts(value);
@@ -51,16 +54,11 @@ export default function SellerProfile() {
       console.log(currentPost);
     });
   };
+  const [phoneNumber, setPhoneNumberOpen] = useState(false);
   return (
     <>
-      <header className={styles.header}>
-        <div className={styles.mobile__logo}>
-          <div className={styles.mobile__img}></div>
-        </div>
-        <CreatePostButton />
-        <PersonalPage />
-      </header>
-      <div className={styles.wrapper}>
+      <Header />
+      <div className={styles.sellerPage__wrapper}>
         <div className={styles.backToMain__box}>
           <div className={styles.logo}></div>
           <Link to="/">
@@ -73,7 +71,11 @@ export default function SellerProfile() {
           <h1 className={styles.seller__title}>Профиль продавца</h1>
           <div className={styles.seller__wrapper}>
             <div className={styles.seller__photo}>
-              <img src="#" alt="" className={styles.settings__pic} />
+              <img
+                src={`http://localhost:8090/${chosenProduct.user.avatar}`}
+                alt=""
+                className={styles.settings__pic}
+              />
             </div>
             <div className={styles.seller__text}>
               <p className={styles.seller__name}>{chosenProduct.user.name}</p>
@@ -82,10 +84,30 @@ export default function SellerProfile() {
                 {dateForSeller(chosenProduct.user.sells_from)}
               </p>
             </div>
-            <div className={styles.seller__showPhone}>
-              <p className={styles.showPhone__text}>Показать телефон</p>
-              <p className={styles.showPhone__number}>8 905 ХХХ ХХ ХХ</p>
-            </div>
+
+            {phoneNumber === false ? (
+              <div className={styles.seller__showPhone}>
+                <p
+                  onClick={() => setPhoneNumberOpen(true)}
+                  className={styles.showPhone__text}
+                >
+                  Показать телефон
+                </p>
+                <p
+                  className={styles.showPhone__number}
+                >{`${chosenProduct.user.phone.slice(0, 6)}ХХХ ХХ ХХ`}</p>
+              </div>
+            ) : (
+              <div className={styles.seller__showPhone}>
+                <p
+                  onClick={() => setPhoneNumberOpen(true)}
+                  className={styles.showPhone__text}
+                ></p>
+                <p className={styles.showPhone__number}>
+                  {chosenProduct.user.phone}
+                </p>
+              </div>
+            )}
           </div>
 
           <section className={styles.myGoods}>
@@ -155,17 +177,7 @@ export default function SellerProfile() {
           </section>
         </main>
       </div>
-      <footer className={styles.mobile__footer}>
-        <div className={styles.mobile__home}>
-          <div className={styles.mobile__home_pic}></div>
-        </div>
-        <div className={styles.mobile__plus}>
-          <div className={styles.mobile__plus_pic}></div>
-        </div>
-        <div className={styles.mobile__profile}>
-          <div className={styles.mobile__profile_pic}></div>
-        </div>
-      </footer>
+      <Footer />
     </>
   );
 }

@@ -6,7 +6,7 @@ import { Link } from "react-router-dom";
 import styles from "../index.module.css";
 // import { fetchUsers } from "../api/requests";
 import { getAllUsers, addUser, getTokens } from "../store/sliceUsers";
-
+import Footer from "../components/Footer";
 
 //import { fetchTokens } from "../api/requests";
 
@@ -32,7 +32,6 @@ export default function Login() {
     });
   }, [url]);
 
-  
   const usersFromRedux = useSelector(
     (state) => state.avitProUser.allUsersFromAPI
   );
@@ -69,6 +68,13 @@ export default function Login() {
 
   return (
     <div className={styles.login}>
+      <header className={styles.header_mob}>
+        <Link to="/">
+          <div className={styles.mobile__logo}>
+            <div className={styles.mobile__img}></div>
+          </div>
+        </Link>
+      </header>
       <section className={styles.login__page}>
         <div className={styles.login__wrapper}>
           <div className={styles.login__logo}></div>
@@ -106,6 +112,7 @@ export default function Login() {
           </Link>
         </div>
       </section>
+      <Footer />
     </div>
   );
 }
