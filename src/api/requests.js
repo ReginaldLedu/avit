@@ -38,15 +38,20 @@ export const avitProApi = createApi({
       }),
     }),
     addImageToThePost: build.mutation({
-      query: ({ formData, id, token }) => ({
-        url: `http://localhost:8090/ads/${id}/image`,
-        method: "POST",
-        headers: {
-          "Content-Type": "mutipart/form-data",
-          Authorization: `Bearer ${token}`,
-        },
-        body: formData,
-      }),
+      query({ file, id, token }) {
+        const formData = new FormData();
+        formData.append("file", file);
+        console.log(file);
+        return {
+          url: `http://localhost:8090/ads/${id}/image`,
+          method: "POST",
+          headers: {
+            "Content-Type": "mutipart/form-data",
+            Authorization: `Bearer ${token}`,
+          },
+          body: { file: file },
+        };
+      },
     }),
     getAllPostIMGRTK: build.query({
       query: () => ({
@@ -81,7 +86,7 @@ export const avitProApi = createApi({
           "Content-Type": "mutipart/form-data",
           Authorization: `Bearer ${token}`,
         },
-        body: { file: file },
+        body: file,
       }),
     }),
   }),

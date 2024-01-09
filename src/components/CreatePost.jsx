@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch /* useSelector */ } from "react-redux";
 import { Link } from "react-router-dom";
 import { closeAddPost } from "../store/slice";
 import styles from "../index.module.css";
@@ -11,7 +11,8 @@ import {
 
 export default function CreatePost() {
   const formIMG = new FormData();
-  const tokens = useSelector((state) => state.avitProUser.tokens);
+  //const tokens = useSelector((state) => state.avitProUser.tokens);
+
   /* async function onSubmit(id, token) {
     let response = await fetch(`http://localhost:8090/ads/${id}/image`, {
       method: "POST",
@@ -89,17 +90,17 @@ export default function CreatePost() {
   };
   const handleFile1Change = (event) => {
     event.preventDefault();
-    formIMG.append("file", event.target.files[0]);
-    console.log(formIMG);
-    setFile1(event.target.files[0]);
+    console.log(event.target.files[0]);
     updatePost({
+      file: event.target.files[0],
       id: newPostId,
-      body: formIMG,
-      token: tokens.access_token,
+      token: accessToken,
     });
-
     console.log(file1);
     fileReader.readAsDataURL(event.target.files[0]);
+    formIMG.append("file", event.target.files[0]);
+
+    setFile1(event.target.files[0]);
   };
 
   const handleFile2Change = (event) => {
@@ -193,7 +194,7 @@ export default function CreatePost() {
             } catch (error) {
               console.log(error);
             } finally {
-              closeCreateForm();
+              console.log("post");
             }
           }}
           type="submit"
