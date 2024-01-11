@@ -5,11 +5,9 @@ import { useSelector, useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
 import styles from "../index.module.css";
 import { dateForSeller } from "../helpers/helper";
-//import CreatePostButton from "../components/CreatePostButton";
 import { getSellerPosts } from "../store/slice";
 import { data } from "../helpers/helper";
 import { getCurrentPost } from "../store/slice";
-//import PersonalPage from "../components/PersonalPage";
 import Footer from "../components/Footer";
 import Header from "../components/Header";
 

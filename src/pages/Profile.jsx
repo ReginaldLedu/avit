@@ -4,15 +4,12 @@ import axios from "axios";
 import { Link } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import styles from "../index.module.css";
-// import CreatePostButton from "../components/CreatePostButton";
 import { getCurrentUserPosts, getCurrentPost } from "../store/slice";
 import { data } from "../helpers/helper";
 import { updateUserDataInAPI, useAddUserAvatarMutation } from "../api/requests";
 import { addUser } from "../store/sliceUsers";
 import Footer from "../components/Footer";
 import Header from "../components/Header";
-
-// import axios from "axios";
 
 export default function Profile() {
   const [chosenPost, setChosenPost] = useState(false);
@@ -21,9 +18,10 @@ export default function Profile() {
   };
   const dispatch = useDispatch();
   const tokens = useSelector((state) => state.avitProUser.tokens);
-  // console.log(tokens);
+
   const userFromRedux = useSelector((state) => state.avitProUser.user);
-  //console.log(userFromRedux);
+  console.log(userFromRedux);
+
   const [status, setStatus] = useState("empty");
   const updateStatus = () => {
     setStatus("updated");
@@ -79,13 +77,6 @@ export default function Profile() {
 
   const [addUserAvatar] = useAddUserAvatarMutation();
 
-  const userPhoto = new FormData();
-  const photoOnChange = (formData, file) => {
-    formData.append("file", file);
-    addUserAvatar({ token: tokens.access_token, formData });
-    console.log(file);
-  };
-
   const updateUserInfo = (event) => {
     const { name, value } = event.target;
     setUserData({ ...userData, [name]: value });
@@ -93,6 +84,18 @@ export default function Profile() {
 
   const updateUserInRedux = (userData) => {
     dispatch(addUser(userData));
+  };
+
+  const handleFileChange = (event) => {
+    event.preventDefault();
+    try {
+      addUserAvatar({
+        token: tokens.access_token,
+        file: event.target.files[0],
+      });
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (
@@ -119,11 +122,22 @@ export default function Profile() {
                 <h2 className={styles.settings__title}>Настройки профиля</h2>
                 <div className={styles.settings__wrapper}>
                   <div className={styles.settings__photo}>
-                    <img src="#" alt="" className={styles.settings__pic} />
+                    {userFromRedux.avatar !== null ? (
+                      <img
+                        src={`http://localhost:8090/${userFromRedux.avatar}`}
+                        alt="userPhoto"
+                        className={styles.settings__pic}
+                      />
+                    ) : (
+                      <img
+                        src="#"
+                        alt="userPhoto"
+                        className={styles.settings__pic}
+                      />
+                    )}
+
                     <input
-                      onChange={(e) =>
-                        photoOnChange(userPhoto, e.target.files[0])
-                      }
+                      onChange={handleFileChange}
                       className={styles.createPost__photoInput}
                       type="file"
                       name="file"
@@ -248,18 +262,4 @@ export default function Profile() {
       )}
     </>
   );
-}
-
-{
-  /*{userPosts.map((post) => (
-                <div key={post.id} className={styles.item}>
-                  <div className={styles.item__pic}></div>
-                  <h3 className={styles.item__title}>
-                    Ракетка для большого тенниса Triumph Pro ST...
-                  </h3>
-                  <p className={styles.item__price}>2 200 ₽</p>
-                  <p className={styles.item__location}>Санкт Петербург</p>
-                  <p className={styles.item__time}>Сегодня в 10:45</p>
-                </div>
-              ))}*/
 }

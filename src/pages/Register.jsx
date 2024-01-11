@@ -3,15 +3,13 @@ import { addUser } from "../store/sliceUsers";
 import { useDispatch } from "react-redux";
 import { Navigate, Link } from "react-router-dom";
 import styles from "../index.module.css";
-// import { register } from "../api/requests";
+
 import { useRegisterRTKMutation } from "../api/requests";
 import Footer from "../components/Footer";
 
-// import { useSelector } from "react-redux";
 
 export default function Register() {
-  /* const userFromRedux = useSelector((state) => state.avitProUser.user);
-  console.log(userFromRedux); */
+
   const [registerRTK] = useRegisterRTKMutation();
 
   const dispatch = useDispatch();
@@ -23,10 +21,7 @@ export default function Register() {
   };
   const EMAIL_REGEXP =
     /^(([^<>()[\].,;:\s@"]+(\.[^<>()[\].,;:\s@"]+)*)|(".+"))@(([^<>()[\].,;:\s@"]+\.)+[^<>()[\].,;:\s@"]{2,})$/iu;
-  /*  function isEmailValid(value) {
-    console.log(EMAIL_REGEXP.test(value));
-    return EMAIL_REGEXP.test(value);
-  } */
+  
 
   const [password, setPassword] = useState("");
   const updatePassword = (value) => {
@@ -58,7 +53,6 @@ export default function Register() {
     setStatus("submitting");
     try {
       await checkFields(email, password, passwordConf);
-
       setStatus("success");
       dispatch(addUser(user));
     } catch (err) {
@@ -90,17 +84,7 @@ export default function Register() {
     id: 0,
   };
 
-  /* async function register({ email, password, name, surname, city }) {
-    let response = await fetch("http://localhost:8090/auth/register", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ email, password, name, surname, city }),
-    });
-    const result = await response.json();
-    console.log(result);
-  } */
+
 
   return (
     <>

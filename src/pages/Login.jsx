@@ -4,11 +4,8 @@ import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
 import { Link } from "react-router-dom";
 import styles from "../index.module.css";
-// import { fetchUsers } from "../api/requests";
 import { getAllUsers, addUser, getTokens } from "../store/sliceUsers";
 import Footer from "../components/Footer";
-
-//import { fetchTokens } from "../api/requests";
 
 export default function Login() {
   const [log, setLog] = useState("");
@@ -60,10 +57,6 @@ export default function Login() {
     dispatch(getTokens(result));
     localStorage.setItem("access_token", result.access_token);
     localStorage.setItem("refresh_token", result.refresh_token);
-    // let access = localStorage.getItem("access_token");
-    // console.log(access);
-    // let refresh = localStorage.getItem("refresh_token");
-    // console.log(refresh);
   }
 
   return (
@@ -93,12 +86,19 @@ export default function Login() {
             placeholder="Пароль"
           />
           <button
-            onClick={() => {
-              checkUserReg(usersFromRedux, log /* password */);
-              fetchTokens({
-                email: log,
-                password: password,
-              });
+            onClick={(e) => {
+              try {
+                e.target.setAttribute("disabled", " ");
+                checkUserReg(usersFromRedux, log);
+                fetchTokens({
+                  email: log,
+                  password: password,
+                });
+              } catch (error) {
+                console.log(error);
+              } finally {
+                e.target.removeAttribute("disabled", " ");
+              }
             }}
             className={styles.login__submit}
           >

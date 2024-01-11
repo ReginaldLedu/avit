@@ -5,7 +5,6 @@ import { useDispatch, useSelector } from "react-redux";
 import styles from "../index.module.css";
 import { allPostsFill, getAllPostImg, getCurrentPost } from "../store/slice";
 import { data } from "../helpers/helper";
-// import { avitProApi } from "../api/requests";
 import { getIMGSRC } from "../helpers/helper";
 import Header from "../components/Header";
 import Footer from "../components/Footer";

@@ -4,12 +4,14 @@ import { Link } from "react-router-dom";
 import styles from "../index.module.css";
 import { useSelector, useDispatch } from "react-redux";
 import { changePostClose } from "../store/slice";
-import { useChangePostRTKMutation } from "../api/requests";
-import { refreshTokens } from "../api/requests";
+import {
+  useChangePostRTKMutation,
+  useAddImageToThePostMutation,
+} from "../api/requests";
 
 export default function ChangePost() {
+  const [updatePost] = useAddImageToThePostMutation();
   const tokens = useSelector((state) => state.avitProUser.tokens);
-
   const dispatch = useDispatch();
   const chosenProduct = useSelector(
     (state) => state.avitProToolkit.currentPost
@@ -40,24 +42,46 @@ export default function ChangePost() {
     id: chosenProduct.id,
     token: tokens.access_token,
   });
+  function checkFields(currentTitle, currentPrice) {
+    return new Promise((resolve, reject) => {
+      setTimeout(() => {
+        let shouldError = currentTitle.length <= 0;
+        let passError = currentPrice.length <= 0;
+        if (shouldError || passError) {
+          reject(
+            new Error("Пожалуйста, заполните поля с названием и ценой	товара")
+          );
+        } else {
+          resolve();
+        }
+      }, 500);
+    });
+  }
 
   const handleChangePost = async () => {
+    checkFields(currentTitle, currentPrice);
     await changePostTextRTK({
       title: currentTitle,
       description: currentDescription,
       price: currentPrice,
       id: chosenProduct.id,
       token: tokens.access_token,
-    })
-      .catch((error) => {
-        if (error.status === 401) {
-          console.log(tokens.access_token, tokens.refresh_token);
-          refreshTokens(tokens.access_token, tokens.refresh_token);
-        }
-      })
-      .then((data) => {
-        console.log(data);
+    });
+  };
+
+  const handleFileChange = (event) => {
+    event.preventDefault();
+    try {
+      updatePost({
+        file: event.target.files[0],
+        id: chosenProduct.id,
+        token: tokens.access_token,
       });
+    } catch (error) {
+      console.log(error);
+    } finally {
+      closeChangePostScreen;
+    }
   };
 
   return (
@@ -118,6 +142,7 @@ export default function ChangePost() {
             <span className={styles.changePost__plus2}></span>
           </label>
           <input
+            onChange={handleFileChange}
             className={styles.changePost__photoInput}
             type="file"
             id="input__file"
@@ -128,6 +153,7 @@ export default function ChangePost() {
             <span className={styles.changePost__plus2}></span>
           </label>
           <input
+            onChange={handleFileChange}
             className={styles.changePost__photoInput}
             type="file"
             id="input__file"
@@ -138,6 +164,7 @@ export default function ChangePost() {
             <span className={styles.changePost__plus2}></span>
           </label>
           <input
+            onChange={handleFileChange}
             className={styles.changePost__photoInput}
             type="file"
             id="input__file"
@@ -152,6 +179,7 @@ export default function ChangePost() {
             <span className={styles.changePost__plus2}></span>
           </label>
           <input
+            onChange={handleFileChange}
             className={styles.changePost__photoInput}
             type="file"
             id="input__file"
@@ -166,6 +194,7 @@ export default function ChangePost() {
             <span className={styles.changePost__plus2}></span>
           </label>
           <input
+            onChange={handleFileChange}
             className={styles.changePost__photoInput}
             type="file"
             id="input__file"

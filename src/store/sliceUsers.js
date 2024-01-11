@@ -26,8 +26,21 @@ export const avitProUserSlice = createSlice({
     getTokens: (state, action) => {
       state.tokens = action.payload;
     },
+    removeUser: (state) => {
+      state.user = {
+        id: 0,
+        password: "",
+        role: "user",
+        email: "",
+        name: "",
+        surname: "",
+        phone: "",
+        city: "",
+      };
+    },
   },
 });
 
-export const { addUser, getAllUsers, getTokens } = avitProUserSlice.actions;
+export const { addUser, getAllUsers, getTokens, removeUser } =
+  avitProUserSlice.actions;
 export default avitProUserSlice.reducer;

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useDispatch /* useSelector */ } from "react-redux";
+import { useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
 import { closeAddPost } from "../store/slice";
 import styles from "../index.module.css";
@@ -10,35 +10,11 @@ import {
 } from "../api/requests";
 
 export default function CreatePost() {
-  const formIMG = new FormData();
-  //const tokens = useSelector((state) => state.avitProUser.tokens);
-
-  /* async function onSubmit(id, token) {
-    let response = await fetch(`http://localhost:8090/ads/${id}/image`, {
-      method: "POST",
-      body: new FormData(formRef.current),
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
-
-    let result = await response.json();
-    alert(result.message);
-  }*/
-  // const formRef = useRef();
-  const [updatePost] =
-    useAddImageToThePostMutation(/*{
-    body: formIMG,
-    token: tokens.access_token,
-  }*/);
-
+  const [updatePost] = useAddImageToThePostMutation();
   const accessToken = localStorage.getItem("access_token");
   const refreshToken = localStorage.getItem("refresh_token");
   const [addPostTextRTK] = useAddPostTextRTKMutation();
-
   const fileReader = new FileReader();
-
-  // console.log(tokens);
   const [url, setURL] = useState("");
 
   fileReader.onloadend = () => {
@@ -47,8 +23,8 @@ export default function CreatePost() {
   };
 
   const [newPostId, setNewPostId] = useState(0);
-
   const handleAddPost = async () => {
+	
     await addPostTextRTK({
       title: formData.title,
       description: formData.description,
@@ -62,7 +38,6 @@ export default function CreatePost() {
         }
       })
       .then((data) => {
-        console.log(data.data.id);
         setNewPostId(data.data.id);
       });
     console.log(newPostId);
@@ -73,11 +48,7 @@ export default function CreatePost() {
     description: "",
     price: "",
   });
-  const [file1, setFile1] = useState("");
-  const [file2, setFile2] = useState(null);
-  const [file3, setFile3] = useState(null);
-  const [file4, setFile4] = useState(null);
-  const [file5, setFile5] = useState(null);
+ 
 
   const handleInputChange = (event) => {
     const { name, value } = event.target;
@@ -88,40 +59,20 @@ export default function CreatePost() {
   const closeCreateForm = () => {
     dispatch(closeAddPost());
   };
-  const handleFile1Change = (event) => {
+  const handleFileChange = (event) => {
     event.preventDefault();
-    console.log(event.target.files[0]);
-    updatePost({
-      file: event.target.files[0],
-      id: newPostId,
-      token: accessToken,
-    });
-    console.log(file1);
+    try {
+      updatePost({
+        file: event.target.files[0],
+        id: newPostId,
+        token: accessToken,
+      });
+    } catch (error) {
+      console.log(error);
+    }
+   
     fileReader.readAsDataURL(event.target.files[0]);
-    formIMG.append("file", event.target.files[0]);
-
-    setFile1(event.target.files[0]);
-  };
-
-  const handleFile2Change = (event) => {
-    event.preventDefault();
-    setFile2(event.target.files[0]);
-    console.log(file2);
-  };
-  const handleFile3Change = (event) => {
-    event.preventDefault();
-    setFile3(event.target.files[0]);
-    console.log(file3);
-  };
-  const handleFile4Change = (event) => {
-    event.preventDefault();
-    setFile4(event.target.files[0]);
-    console.log(file4);
-  };
-  const handleFile5Change = (event) => {
-    event.preventDefault();
-    setFile5(event.target.files[0]);
-    console.log(file5);
+   
   };
 
   return (
@@ -145,7 +96,6 @@ export default function CreatePost() {
             <span className={styles.createPost__close2}></span>
           </div>
         </div>
-
         <label htmlFor="goodsTitle" className={styles.createPost__labels}>
           Название
         </label>
@@ -158,7 +108,6 @@ export default function CreatePost() {
           type="text"
           className={styles.goodsTitle}
         />
-
         <label htmlFor="goodsText" className={styles.createPost__labels}>
           Описание
         </label>
@@ -194,7 +143,7 @@ export default function CreatePost() {
             } catch (error) {
               console.log(error);
             } finally {
-              console.log("post");
+              () => closeCreateForm();
             }
           }}
           type="submit"
@@ -207,7 +156,7 @@ export default function CreatePost() {
         <p className={styles.changePost__photosTitle}>
           Фотографии товара{" "}
           <span className={styles.changePost__photosTitle_grey}>
-            {" "}
+         
             не более 5 фотографий
           </span>
         </p>
@@ -221,7 +170,7 @@ export default function CreatePost() {
           <span className={styles.createPost__plus2}></span>
         </label>
         <input
-          onChange={handleFile1Change}
+          onChange={handleFileChange}
           className={styles.createPost__photoInput}
           type="file"
           id="input__file1"
@@ -236,7 +185,7 @@ export default function CreatePost() {
           <span className={styles.createPost__plus2}></span>
         </label>
         <input
-          onChange={handleFile2Change}
+          onChange={handleFileChange}
           className={styles.createPost__photoInput}
           type="file"
           id="input__file2"
@@ -251,7 +200,7 @@ export default function CreatePost() {
           <span className={styles.createPost__plus2}></span>
         </label>
         <input
-          onChange={handleFile3Change}
+          onChange={handleFileChange}
           className={styles.createPost__photoInput}
           type="file"
           id="input__file3"
@@ -266,7 +215,7 @@ export default function CreatePost() {
           <span className={styles.createPost__plus2}></span>
         </label>
         <input
-          onChange={handleFile4Change}
+          onChange={handleFileChange}
           className={styles.createPost__photoInput}
           type="file"
           id="input__file4"
@@ -281,7 +230,7 @@ export default function CreatePost() {
           <span className={styles.createPost__plus2}></span>
         </label>
         <input
-          onChange={handleFile5Change}
+          onChange={handleFileChange}
           className={styles.createPost__photoInput}
           type="file"
           id="input__file5"

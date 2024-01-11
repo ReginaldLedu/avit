@@ -4,7 +4,6 @@ import { Link, Navigate } from "react-router-dom";
 import axios from "axios";
 import { useEffect } from "react";
 import { data } from "../helpers/helper";
-/* import CreatePostButton from "../components/CreatePostButton"; */
 import Header from "../components/Header";
 import Comment from "../components/Comment";
 import CommentButton from "../components/CommentButton";
@@ -12,37 +11,15 @@ import styles from "../index.module.css";
 import { getComments } from "../store/slice";
 import ShowPhoneButton from "../components/ShowPhoneButton";
 import Footer from "../components/Footer";
+import SliderForCurrentIPost from "../components/SliderForCurrentIPost";
 
 export default function CurrentPost() {
-  const allProductIMG = useSelector((state) => state.avitProToolkit.allPostIMG);
-  console.log(allProductIMG);
-
   const dispatch = useDispatch();
   const chosenProduct = useSelector(
     (state) => state.avitProToolkit.currentPost
   );
   const id = chosenProduct.id;
   const url = `http://localhost:8090/ads/${id}/comments`;
-  //const userFromRedux = useSelector((state) => state.avitProUser.user);
-  //const userId = userFromRedux.id;
-  const filteredImg = allProductIMG.filter(
-    (item) => item.ad_id === chosenProduct.id
-  );
-  //const page = 1;
-
-  useEffect(() => {
-    axios
-      .get("http://localhost:8090/comments", {
-        params: {
-          page: [],
-        },
-      })
-      .then((resp) => {
-        const allcomments = resp.data;
-        // dispatch(getComments(allcomments));
-        console.log(allcomments);
-      });
-  }, []);
 
   useEffect(() => {
     axios
@@ -68,15 +45,6 @@ export default function CurrentPost() {
       {chosenProduct.title !== undefined ? (
         <>
           <Header />
-          {/* <header className={styles.header}>
-            <div className={styles.mobile__logo}>
-              <div className={styles.mobile__img}></div>
-            </div>
-            <CreatePostButton />
-            <Link to="/profile">
-              <div className={styles.profile__button}>Личный кабинет</div>
-            </Link>
-          </header> */}
           <div className={styles.profile__wrapper}>
             <div className={styles.backToMain__box}>
               <div className={styles.logo}></div>
@@ -88,25 +56,7 @@ export default function CurrentPost() {
             </div>
             <main className={styles.main}>
               <div className={styles.itemPage__wrapper}>
-                <div className={styles.itemPage__photo}>
-                  <ul className={styles.itemPage__carousel}>
-                    {filteredImg.length > 0 ? (
-                      filteredImg.map((item) => (
-                        <li className={styles.carousel__pic} key={item.id}>
-                          <img
-                            key={item.id}
-                            src={`http://localhost:8090/${item.url}`}
-                            alt="#"
-                            className={styles.carousel__img}
-                            //className={styles.itemPage__pic}
-                          />
-                        </li>
-                      ))
-                    ) : (
-                      <p className={styles.itemPage__noIMG}>НЕТ ФОТО</p>
-                    )}
-                  </ul>
-                </div>
+                <SliderForCurrentIPost />
 
                 <div className={styles.itemPage__text}>
                   <h3 className={styles.itemPage__title}>
